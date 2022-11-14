@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'ping',
-	description: 'Just a test command.',
+	description: 'Komenda testowa.',
 
 	async execute(client, message, args) {
 		message.reply('pong')

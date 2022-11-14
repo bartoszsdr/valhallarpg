@@ -2,7 +2,6 @@ const fs = require('fs')
 const characters = require('../data/characters.json')
 const inventory = require('../data/inventory.json')
 const locations = require('../data/locations')
-const { EmbedBuilder } = require('discord.js')
 
 module.exports = {
 	name: 'sell',

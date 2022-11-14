@@ -1,5 +1,4 @@
 const fs = require('fs')
-const { EmbedBuilder } = require('discord.js')
 const characters = require('../data/characters.json')
 const locations = require('../data/locations')
 

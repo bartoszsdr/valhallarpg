@@ -1,4 +1,3 @@
-const { EmbedBuilder } = require('discord.js')
 const fs = require('fs')
 const inventory = require('../data/inventory.json')
 
@@ -9,9 +8,6 @@ module.exports = {
 	async execute(client, message, args) {
 		let uInventoryActive = inventory[message.author.id].active
 		let uInventoryBackpack = inventory[message.author.id].backpack
-
-		// let playerInvActive = await db.get(`${player}.invActive`)
-		// let playerInvBackpack = await db.get(`${player}.invBackpack`)
 
 		let argsToNumber = parseInt(args[0], 10)
 		let correctIndex = argsToNumber - 1
@@ -28,10 +24,19 @@ module.exports = {
 			fs.writeFile('./data/inventory.json', JSON.stringify(inventory), err => {
 				if (err) console.log(err)
 			})
-			const useEmbed = new EmbedBuilder().setColor(0x0099ff).setDescription(`Przeniesiono przedmiot.`)
+
+			const useEmbed = {
+				color: 0x0099ff,
+				description: 'Przeniesiono przedmiot.',
+			}
+
 			message.channel.send({ embeds: [useEmbed] })
 		} else {
-			const useErrorEmbed = new EmbedBuilder().setColor(0x0099ff).setDescription(`Podano nieprawidłowy slot.`)
+			const useErrorEmbed = {
+				color: 0x0099ff,
+				description: 'Podano nieprawidłowy slot.',
+			}
+
 			message.channel.send({ embeds: [useErrorEmbed] })
 		}
 

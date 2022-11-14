@@ -1,11 +1,10 @@
-const { EmbedBuilder } = require('discord.js')
 const fs = require('fs')
 const inventory = require('../data/inventory.json')
 const items = require('../data/items')
 
 module.exports = {
 	name: 'item',
-	description: 'Wyrzuć przedmioty.',
+	description: 'Pokaż opis przedmiotu.',
 
 	async execute(client, message, args) {
 		let uInventoryBackpack = inventory[message.author.id].backpack
@@ -15,7 +14,6 @@ module.exports = {
 
 		if (uInventoryBackpack[correctIndex]) {
 			const foundItem = uInventoryBackpack[correctIndex]
-			console.log(foundItem)
 
 			const itemEmbed = {
 				color: 0x992e22,

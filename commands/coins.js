@@ -18,10 +18,6 @@ module.exports = {
 		console.log(`${coinAmount} ; ${baseAmount}`)
 
 		if (coinAmount === baseAmount) {
-			// coins[message.author.id] = {
-			// 	coins: coins[message.author.id].coins + coinAmount,
-			// }
-
 			coins[message.author.id].coins = coins[message.author.id].coins + coinAmount
 
 			fs.writeFile('./data/coins.json', JSON.stringify(coins), err => {

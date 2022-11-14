@@ -1,15 +1,16 @@
 {
-	"name": "discordbot-v2",
-	"version": "1.0.0",
-	"description": "",
+	"name": "valhallarpg",
+	"version": "0.0.2",
+	"description": "Discord Bot RPG game inspired by many RPGs and cRPGs featuring adventures, quests, character development, PvP, riddles to solve, loot, inventory, training system and storyline.",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
-	"author": "",
+	"author": "bartoszsdr",
 	"license": "ISC",
 	"dependencies": {
 		"discord.js": "^14.6.0",
+		"dotenv": "^16.0.3",
 		"fs": "^0.0.1-security"
 	}
 }

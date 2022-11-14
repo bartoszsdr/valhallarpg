@@ -1,4 +1,3 @@
-const { EmbedBuilder } = require('discord.js')
 const fs = require('fs')
 const inventory = require('../data/inventory.json')
 const items = require('../data/items')
