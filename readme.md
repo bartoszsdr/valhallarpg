@@ -1,5 +1,5 @@
 # Valhalla RPG*
-Take quests, go on adventures, collect loot and develop your character. Valhalla RPG* is a discord bot game that has taken inspiration from the settings of many text based RPGs. The bot allows you to create your own character, equip and upgrade weapons and armours, train skills, fight creatures, bosses and other players, explore locations as well as get to know the story and solve riddles.
+This is a discord bot game that is inspired from the settings of many text based RPGs, RPGs and cRPGs. The bot allows you to create your own character, loot, equip and upgrade weapons and armours, train skills, fight creatures, bosses and other players, explore locations as well as get to know the storyline.
 
 <sub>*Working title, work in progress</sub>
 
