@@ -1,29 +1,28 @@
+const { EmbedBuilder } = require('discord.js')
 const fs = require('fs')
-const characters = require('../data/characters.json')
-const locations = require('../data/locations.js')
+const players = require('../data/players.json')
+const locations = require('../data/locations')
 
 module.exports = {
 	name: 'return',
-	description: 'Wróć do Cytadeli',
+	description: 'Wróć do Cytadeli.',
 
 	async execute(client, message, args) {
-		let characterLocation = characters[message.author.id].characterLocation
+		let player = players[message.author.id]
 
-		if (characterLocation !== locations[0]) {
-			characterLocation = locations[0]
-			fs.writeFile('./data/characters.json', JSON.stringify(characters), err => {
+		if (player.location !== locations[0]) {
+			player.location = locations[0]
+			fs.writeFile('./data/players.json', JSON.stringify(players), err => {
 				if (err) console.log(err)
 			})
-			const returnEmbed = {
-				color: 0x992e22,
-				description: `Wracasz do Cytadeli.`,
-			}
+			const returnEmbed = new EmbedBuilder()
+				.setColor(0x992e22)
+				.setDescription('Wracasz do Cytadeli.')
 			message.channel.send({ embeds: [returnEmbed] })
 		} else {
-			const returnErrorEmbed = {
-				color: 0x992e22,
-				description: `Jesteś już w Cytadeli.`,
-			}
+			const returnErrorEmbed = new EmbedBuilder()
+				.setColor(0x992e22)
+				.setDescription('Jesteś już w Cytadeli.')
 			message.channel.send({ embeds: [returnErrorEmbed] })
 		}
 	},

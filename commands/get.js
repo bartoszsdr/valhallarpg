@@ -1,19 +1,19 @@
 const fs = require('fs')
-const inventory = require('../data/inventory.json')
+const players = require('../data/players.json')
 const items = require('../data/items')
 
 module.exports = {
 	name: 'get',
-	description: 'Weź przedmioty.',
+	description: 'Komenda testowa.',
 
 	async execute(client, message, args) {
-		let uInventoryBackpack = inventory[message.author.id].backpack
+		let backpack = players[message.author.id].inventory.backpack
 
-		if (args[0] == 1 && uInventoryBackpack.length < 5) {
+		if (args[0] == 1 && backpack.length < 5) {
 			let item = items[Math.floor(Math.random() * items.length)]
-			uInventoryBackpack.push(item)
+			backpack.push(item)
 			console.log(item)
-			fs.writeFile('./data/inventory.json', JSON.stringify(inventory), err => {
+			fs.writeFile('./data/players.json', JSON.stringify(players), err => {
 				if (err) console.log(err)
 			})
 			message.channel.send('Dodano 1 przedmiot.')

@@ -1,27 +1,41 @@
 const { EmbedBuilder } = require('discord.js')
 const fs = require('fs')
-const inventory = require('../data/inventory.json')
+const players = require('../data/players.json')
 
 module.exports = {
 	name: 'drop',
 	description: 'Wyrzuć przedmioty.',
 
 	async execute(client, message, args) {
-		let uInventoryBackpack = inventory[message.author.id].backpack
+		let backpack = players[message.author.id].inventory.backpack
 
-		let argsToNumber = parseInt(args[0], 10)
-		let correctIndex = argsToNumber - 1
+		let correctIndex = []
+		for (let i = 0; i < args.length; i++) {
+			correctIndex.push(parseInt(args[i] - 1, 10))
+		}
 
-		if (uInventoryBackpack[correctIndex]) {
-			uInventoryBackpack.splice(correctIndex, 1)[0]
-			fs.writeFile('./data/inventory.json', JSON.stringify(inventory), err => {
-				if (err) console.log(err)
-			})
-			const dropEmbed = new EmbedBuilder().setColor(0x0099ff).setDescription(`Wyrzucono przedmiot.`)
-			message.channel.send({ embeds: [dropEmbed] })
-		} else {
-			const dropErrorEmbed = new EmbedBuilder().setColor(0x0099ff).setDescription(`Podano nieprawidłowy slot.`)
-			message.channel.send({ embeds: [dropErrorEmbed] })
+		function dropItems() {
+			for (let i = correctIndex.length - 1; i >= 0; i--) {
+				backpack.splice(correctIndex[i], 1)
+			}
+		}
+
+		for (let i = 0; i < correctIndex.length; i++) {
+			if (backpack[correctIndex[i]]) {
+				dropItems()
+				fs.writeFile('./data/players.json', JSON.stringify(players), err => {
+					if (err) console.log(err)
+				})
+				const dropEmbed = new EmbedBuilder()
+					.setColor(0x992e22)
+					.setDescription(`Wyrzucone przedmioty: ${correctIndex.length}.`)
+				return message.channel.send({ embeds: [dropEmbed] })
+			} else {
+				const dropErrorEmbed = new EmbedBuilder()
+					.setColor(0x992e22)
+					.setDescription('Podano pusty slot.')
+				return message.channel.send({ embeds: [dropErrorEmbed] })
+			}
 		}
 	},
 }

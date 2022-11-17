@@ -1,51 +1,53 @@
+const { EmbedBuilder } = require('discord.js')
 const fs = require('fs')
-const characters = require('../data/characters.json')
-const inventory = require('../data/inventory.json')
-const locations = require('../data/locations')
+const players = require('../data/players.json')
 
 module.exports = {
 	name: 'sell',
-	description: 'Sprzedaj przedmiot.',
+	description: 'Sprzedaj przedmioty.',
 
 	async execute(client, message, args) {
-		let uInventoryBackpack = inventory[message.author.id].backpack
+        let player = players[message.author.id]
+        let backpack = players[message.author.id].inventory.backpack
+        let itemValues = [] 
+        let totalValue
 
-		let argsToNumber = parseInt(args[0], 10)
-		let correctIndex = argsToNumber - 1
-
-		if (characters[message.author.id].characterLocation !== locations[0]) {
-			const sellErrorEmbed = {
-				color: 0x992e22,
-				description: `Sprzedawać możesz tylko w Cytadeli.`,
-			}
-
-			message.channel.send({ embeds: [sellErrorEmbed] })
-		} else if (uInventoryBackpack[correctIndex]) {
-			let soldItem = uInventoryBackpack[correctIndex].value
-			let soldItemValue = parseInt(soldItem, 10)
-			uInventoryBackpack.splice(correctIndex, 1)[0]
-
-			characters[message.author.id].characterWallet = characters[message.author.id].characterWallet + soldItemValue
-
-			console.log(characters[message.author.id].characterWallet)
-
-			fs.writeFile('./data/characters.json', JSON.stringify(characters), err => {
-				if (err) console.log(err)
-			})
-			fs.writeFile('./data/inventory.json', JSON.stringify(inventory), err => {
-				if (err) console.log(err)
-			})
-			const soldEmbed = {
-				color: 0x992e22,
-				description: `Sprzedano przedmiot za **${soldItemValue}** :coin:`,
-			}
-			message.channel.send({ embeds: [soldEmbed] })
-		} else {
-			const soldErrorEmbed = {
-				color: 0x992e22,
-				description: `Podano nieprawidłowy slot.`,
-			}
-			message.channel.send({ embeds: [soldErrorEmbed] })
+		let index = []
+		for (let i = 0; i < args.length; i++) {
+			index.push(parseInt(args[i] - 1, 10))
 		}
+
+        function sellItems() {
+            for (let i = index.length - 1; i >= 0; i--) {
+				if (!backpack[index[i]]) {
+					const sellErrorEmbed = new EmbedBuilder()
+						.setColor(0x992e22)
+						.setDescription('Podano pusty slot.')
+					return message.channel.send({ embeds: [sellErrorEmbed] })
+				} else {
+                    itemValues.push(parseInt(backpack[index[i]].value, 10))
+                    totalValue = itemValues.reduce((pv, cv) => pv + cv, 0);
+                    player.inventory.backpack.splice(index[i], 1)
+                    player.balance.coins = player.balance.coins + totalValue           
+				}
+			}
+			fs.writeFile('./data/players.json', JSON.stringify(players), err => {
+				if (err) console.log(err)
+			})
+			const useEmbed = new EmbedBuilder()
+				.setColor(0x992e22)
+				.setDescription(`Sprzedane przedmioty: ${index.length}\nOtrzymane: **${totalValue}** :coin:`)
+			message.channel.send({ embeds: [useEmbed] })
+        }
+
+        if (args.length) {
+			sellItems()
+		} else {
+			const sellErrorEmbed = new EmbedBuilder()
+				.setColor(0x992e22)
+				.setDescription('Musisz podać slot plecaka.')
+			message.channel.send({ embeds: [sellErrorEmbed] })
+		}
+	
 	},
 }

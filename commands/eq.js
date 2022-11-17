@@ -1,54 +1,39 @@
-const fs = require('fs')
-const inventory = require('../data/inventory.json')
+const { EmbedBuilder } = require('discord.js')
+const players = require('../data/players.json')
 
 module.exports = {
 	name: 'eq',
 	description: 'Wyświetl ekwipunek postaci.',
 
 	async execute(client, message, args) {
-		let player = message.author.id
-
-		if (!inventory[message.author.id]) {
-			inventory[message.author.id] = {
-				active: [],
-				backpack: [],
-			}
-			fs.writeFile('./data/inventory.json', JSON.stringify(inventory), err => {
-				if (err) console.log(err)
-			})
-		}
-
-		let playerInventory = inventory[message.author.id]
+		let inventory = players[message.author.id].inventory
 		let invActiveEmbed = `:unlock: *Aktywne:* \n`
 		let invBackpackEmbed = `:school_satchel: *Plecak:* \n`
 
 		for (let i = 0; i < 5; ++i) {
-			if (!inventory[message.author.id].active[i]) {
+			if (!inventory.active[i]) {
 				invActiveEmbed += `${i + 1}.` + '\n'
 			} else {
 				invActiveEmbed +=
-					`${i + 1}. **${playerInventory.active[i].name}** ${playerInventory.active[i].type} **${
-						playerInventory.active[i].attack
-					}**` + '\n'
+					`${i + 1}. **${inventory.active[i].name}** ${inventory.active[i].type} **${inventory.active[i].attack}**` +
+					'\n'
 			}
 		}
 
 		for (let i = 0; i < 5; ++i) {
-			if (!inventory[message.author.id].backpack[i]) {
+			if (!inventory.backpack[i]) {
 				invBackpackEmbed += `${i + 1}.` + '\n'
 			} else {
 				invBackpackEmbed +=
-					`${i + 1}. **${playerInventory.backpack[i].name}** ${playerInventory.backpack[i].type} **${
-						playerInventory.backpack[i].attack
+					`${i + 1}. **${inventory.backpack[i].name}** ${inventory.backpack[i].type} **${
+						inventory.backpack[i].attack
 					}**` + '\n'
 			}
 		}
 
-		const invEmbed = {
-			color: 0x992e22,
-			description: `${invActiveEmbed}` + `\n` + `${invBackpackEmbed}` + `\n`,
-		}
-
+		const invEmbed = new EmbedBuilder()
+			.setColor(0x992e22)
+			.setDescription(`${invActiveEmbed}` + `\n` + `${invBackpackEmbed}` + `\n`)
 		message.channel.send({ embeds: [invEmbed] })
 	},
 }

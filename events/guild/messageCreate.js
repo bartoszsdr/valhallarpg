@@ -1,4 +1,5 @@
 const { EmbedBuilder } = require('discord.js')
+const players = require('../../data/players.json')
 
 module.exports = (Discord, client, message) => {
 	if (message.author.bot) return
@@ -8,10 +9,21 @@ module.exports = (Discord, client, message) => {
 
 	const command = client.commands.get(cmd)
 
+	if (!players[message.author.id] && cmd !== 'register') {
+		const registerFirstEmbed = {
+			color: 0x0099ff,
+			description: 'Komenda do rejestracji: **register** *imię postaci*',
+		}
+		return message.channel.send({ embeds: [registerFirstEmbed] })
+	}
+
 	if (command) {
 		command.execute(client, message, args, Discord)
 	} else {
-		const wrongCommand = new EmbedBuilder().setColor(0x0099ff).setDescription(`:warning: Nieprawidłowa komenda.`)
+		const wrongCommand = {
+			color: 0x0099ff,
+			description: ':warning: Nieprawidłowa komenda.',
+		}
 		message.channel.send({ embeds: [wrongCommand] })
 	}
 

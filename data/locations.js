@@ -1,1 +1,1 @@
-module.exports = ['Cytadela', 'Las']
+module.exports = ['Cytadela', 'Jezioro', 'Las']

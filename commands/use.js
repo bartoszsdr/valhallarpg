@@ -1,42 +1,47 @@
+const { EmbedBuilder } = require('discord.js')
 const fs = require('fs')
-const inventory = require('../data/inventory.json')
+const players = require('../data/players.json')
 
 module.exports = {
 	name: 'use',
 	description: 'Użyj przedmiotu.',
 
 	async execute(client, message, args) {
-		let uInventoryActive = inventory[message.author.id].active
-		let uInventoryBackpack = inventory[message.author.id].backpack
+		let active = players[message.author.id].inventory.active
+		let backpack = players[message.author.id].inventory.backpack
 
-		let argsToNumber = parseInt(args[0], 10)
-		let correctIndex = argsToNumber - 1
-
-		if (uInventoryActive.length == 5) {
-			return message.channel.send('Nie możesz przenieść więcej przedmiotów.')
+		let index = []
+		for (let i = 0; i < args.length; i++) {
+			index.push(parseInt(args[i] - 1, 10))
 		}
 
-		if (uInventoryBackpack[correctIndex]) {
-			let item = uInventoryBackpack.splice(correctIndex, 1)[0]
-			console.log(item)
-			uInventoryActive.push(item)
-
-			fs.writeFile('./data/inventory.json', JSON.stringify(inventory), err => {
+		function useItems() {
+			for (let i = index.length - 1; i >= 0; i--) {
+				if (!backpack[index[i]]) {
+					const useErrorEmbed = new EmbedBuilder()
+						.setColor(0x992e22)
+						.setDescription('Podano pusty slot.')
+					return message.channel.send({ embeds: [useErrorEmbed] })
+				} else {
+					active.push(backpack[index[i]])
+					backpack.splice(index[i], 1)
+				}
+			}
+			fs.writeFile('./data/players.json', JSON.stringify(players), err => {
 				if (err) console.log(err)
 			})
-
-			const useEmbed = {
-				color: 0x0099ff,
-				description: 'Przeniesiono przedmiot.',
-			}
-
+			const useEmbed = new EmbedBuilder()
+				.setColor(0x992e22)
+				.setDescription(`Przeniesione przedmioty: ${index.length}`)
 			message.channel.send({ embeds: [useEmbed] })
-		} else {
-			const useErrorEmbed = {
-				color: 0x0099ff,
-				description: 'Podano nieprawidłowy slot.',
-			}
+		}
 
+		if (args.length) {
+			useItems()
+		} else {
+			const useErrorEmbed = new EmbedBuilder()
+				.setColor(0x992e22)
+				.setDescription('Musisz podać slot plecaka.')
 			message.channel.send({ embeds: [useErrorEmbed] })
 		}
 

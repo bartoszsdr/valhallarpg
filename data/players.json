@@ -1,0 +1,16 @@
+{
+	"303177209450070016": {
+		"name": "Mila",
+		"location": "Cytadela",
+		"inventory": { "active": [], "backpack": [] },
+		"stats": { "attack": 0, "tactics": 0, "magic": 0, "training": 0 },
+		"balance": { "coins": 550, "gems": 0 }
+	},
+	"692766089922478142": {
+		"name": "Ulla",
+		"location": "Cytadela",
+		"inventory": { "active": [], "backpack": [] },
+		"stats": { "attack": 0, "tactics": 0, "magic": 0, "training": 0 },
+		"balance": { "coins": 0, "gems": 0 }
+	}
+}
